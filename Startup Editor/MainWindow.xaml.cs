@@ -145,17 +145,40 @@ namespace Startup_Editor
 
         private void startupListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            registryLocationTextBox.Text = ((startItems)startupListBox.SelectedItem).registryLocation;
-            if(((startItems)startupListBox.SelectedItem).currentUser)
+            try
             {
-                currentUserCheckBox.IsChecked = true;
+                registryLocationTextBox.Text = ((startItems)startupListBox.SelectedItem).registryLocation;
             }
-            else
+            catch (Exception)
+            {
+                registryLocationTextBox.Text = "";
+            }
+            
+            try
+            {
+                if (((startItems)startupListBox.SelectedItem).currentUser)
+                {
+                    currentUserCheckBox.IsChecked = true;
+                }
+                else
+                {
+                    currentUserCheckBox.IsChecked = false;
+                }
+            }
+            catch (Exception)
             {
                 currentUserCheckBox.IsChecked = false;
             }
 
-            textBox.Text = ((startItems)startupListBox.SelectedItem).executableLocation;
+            try
+            {
+                textBox.Text = ((startItems)startupListBox.SelectedItem).executableLocation;
+            }
+            catch (Exception)
+            {
+                textBox.Text = "";
+            }
+            
         }
 
 
@@ -168,6 +191,7 @@ namespace Startup_Editor
                 return;
             }
 
+            List<startItems> toDelete = new List<startItems>();
              foreach(startItems item in startupListBox.SelectedItems)
             {
                 //Is this under current user
@@ -182,6 +206,7 @@ namespace Startup_Editor
                         else
                         {
                             currentUserDelete.DeleteValue(item.name);
+                            toDelete.Add(item);
                         }
                     }
                 }
@@ -203,9 +228,16 @@ namespace Startup_Editor
                         else
                         {
                             localUserDelete.DeleteValue(item.name);
+                            toDelete.Add(item);
                         }
                     }
                 }
+            }
+
+             //Now remove each item in the to be deleted
+             foreach(startItems item in toDelete)
+            {
+                startupListBox.Items.Remove(item);
             }
             
         }
