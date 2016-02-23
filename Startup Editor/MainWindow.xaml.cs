@@ -16,7 +16,12 @@ namespace Startup_Editor
         public MainWindow()
         {
             InitializeComponent();
-
+            startupListBox.IsTextSearchEnabled = true;
+            if (IsUserAdministrator() != true)
+            {
+                adminNoticeTextBlock.Text = "Warning! Not running as admin. Some functionality is lost!";
+            }
+            
             main();
               
         }
@@ -24,6 +29,7 @@ namespace Startup_Editor
 
         private void main()
         {
+
             //Open the current user registry
             RegistryKey currentUserRun = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
@@ -60,36 +66,61 @@ namespace Startup_Editor
             }
 
             //Now grab the local startup items
-            RegistryKey localMachineRun = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            RegistryKey localMachineRun = null;
+            try
+            {
+                localMachineRun = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message, "Cannot access Local Run", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
             //Add each subvalue to the list
-            foreach (string item in localMachineRun.GetValueNames())
+            if(localMachineRun != null)
             {
-                startupList.Add(new startItems()
+                foreach (string item in localMachineRun.GetValueNames())
                 {
-                    name = item,
-                    registryLocation = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
-                    currentUser = false,
-                    executableLocation = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", item, null)
-                });
+                    startupList.Add(new startItems()
+                    {
+                        name = item,
+                        registryLocation = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+                        currentUser = false,
+                        executableLocation = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", item, null)
+                    });
 
+                }
             }
+
 
             //Now grab the local startup runonce
-            RegistryKey localMachineRunOnce = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce", true);
+            RegistryKey localMachineRunOnce = null;
+            try
+            {
+                localMachineRunOnce = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce", true);
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message, "Cannot access Local RunOnce", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            
 
             //Add each subvalue to the list
-            foreach (string item in localMachineRunOnce.GetValueNames())
+            if(localMachineRunOnce != null)
             {
-                startupList.Add(new startItems()
+                foreach (string item in localMachineRunOnce.GetValueNames())
                 {
-                    name = item,
-                    registryLocation = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce",
-                    currentUser = false,
-                    executableLocation = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", item, null)
-                });
+                    startupList.Add(new startItems()
+                    {
+                        name = item,
+                        registryLocation = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce",
+                        currentUser = false,
+                        executableLocation = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", item, null)
+                    });
 
+                }
             }
+            
 
 
             //Set the name to be displayed in the listbox
@@ -209,7 +240,9 @@ namespace Startup_Editor
             return isAdmin;
         }
 
-
-
+        private void textBox1_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            
+        }
     }
 }
