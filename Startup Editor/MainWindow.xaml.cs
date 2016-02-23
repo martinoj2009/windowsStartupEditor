@@ -29,6 +29,7 @@ namespace Startup_Editor
 
         private void main()
         {
+            startupListBox.Items.Clear();
 
             //Open the current user registry
             RegistryKey currentUserRun = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
@@ -49,6 +50,7 @@ namespace Startup_Editor
                 });
 
             }
+            currentUserRun = null;
 
             //Grab all items in Current user RunOnce
             RegistryKey currentUserRunOnce = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce", true);
@@ -66,6 +68,7 @@ namespace Startup_Editor
                 });
 
             }
+            currentUserRunOnce = null;
 
             //Grab the current run desktop enviroment
             RegistryKey currentUserDesktop = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon", true);
@@ -89,7 +92,7 @@ namespace Startup_Editor
             {
 
             }
-            
+            currentUserDesktop = null;
 
             //Now grab the local startup items
             RegistryKey localMachineRun = null;
@@ -180,7 +183,7 @@ namespace Startup_Editor
 
                 }
             }
-            
+            localMachineRunOnce = null;
 
 
             //Set the name to be displayed in the listbox
@@ -199,6 +202,7 @@ namespace Startup_Editor
                     promptForDelete = item.promptForDelete
                 });
             }
+            startupList = null;
         }
 
 
@@ -275,6 +279,11 @@ namespace Startup_Editor
                                     toDelete.Add(item);
                                 }
                             }
+                            else
+                            {
+                                currentUserDelete.DeleteValue(item.name);
+                                toDelete.Add(item);
+                            }
                             
                         }
                     }
@@ -304,6 +313,11 @@ namespace Startup_Editor
                                     localUserDelete.DeleteValue(item.name);
                                     toDelete.Add(item);
                                 }
+                            }
+                            else
+                            {
+                                localUserDelete.DeleteValue(item.name);
+                                toDelete.Add(item);
                             }
                             
                         }
@@ -352,5 +366,9 @@ namespace Startup_Editor
             return isAdmin;
         }
 
+        private void button_Click(object sender, RoutedEventArgs e)
+        {
+            main();
+        }
     }
 }
