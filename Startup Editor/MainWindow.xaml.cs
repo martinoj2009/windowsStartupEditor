@@ -65,6 +65,30 @@ namespace Startup_Editor
 
             }
 
+            //Grab the current run desktop enviroment
+            RegistryKey currentUserDesktop = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon", true);
+
+            //Test to see if a custom desktop enviroment is set
+            try
+            {
+                if (currentUserDesktop.GetValue("Shell").ToString().Length > 0)
+                {
+                    startupList.Add(new startItems
+                    {
+                        name = "Shell",
+                        registryLocation = "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon",
+                        currentUser = true,
+                        executableLocation = currentUserDesktop.GetValue("Shell").ToString()
+                    });
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            
+
+
             //Now grab the local startup items
             RegistryKey localMachineRun = null;
             try
@@ -239,6 +263,9 @@ namespace Startup_Editor
             {
                 startupListBox.Items.Remove(item);
             }
+
+             //Null any unsused 
+            toDelete = null;
             
         }
 
@@ -272,9 +299,5 @@ namespace Startup_Editor
             return isAdmin;
         }
 
-        private void textBox1_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            
-        }
     }
 }

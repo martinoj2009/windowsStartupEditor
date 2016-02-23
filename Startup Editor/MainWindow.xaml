@@ -16,8 +16,6 @@
         <TextBlock x:Name="executeTextBlock" HorizontalAlignment="Left" Margin="377,123,0,0" TextWrapping="Wrap" Text="Execute:" Height="21" VerticalAlignment="Top"/>
         <Button x:Name="deleteSelectedButton" Content="Delete Selected" Margin="377,206,0,0" VerticalAlignment="Top" Height="46" HorizontalAlignment="Left" Width="93" Click="deleteSelectedButton_Click"/>
         <TextBlock x:Name="adminNoticeTextBlock" Margin="398,332,5,0" TextWrapping="Wrap" IsEnabled="False" Height="33" VerticalAlignment="Top"/>
-        <TextBox x:Name="textBox1" HorizontalAlignment="Left" Height="23" Margin="53,17,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="310" TextChanged="textBox1_TextChanged"/>
-        <TextBlock x:Name="searchTextBlock" HorizontalAlignment="Left" Margin="10,24,0,0" TextWrapping="Wrap" Text="Search:" VerticalAlignment="Top"/>
 
     </Grid>
 
