@@ -13,8 +13,8 @@ namespace Startup_Editor
         public string executableLocation { get; set; }
         public string registryLocation { get; set; }
         public Boolean currentUser { get; set; }
-        public Boolean localMachine { get; set; }
 
+        public Boolean promptForDelete { get; set; }
 
 
     }

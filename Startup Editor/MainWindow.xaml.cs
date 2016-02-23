@@ -44,7 +44,8 @@ namespace Startup_Editor
                     name = item,
                     registryLocation = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
                     currentUser = true,
-                    executableLocation = (string)Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", item, null)
+                    executableLocation = (string)Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", item, null),
+                    promptForDelete = false
                 });
 
             }
@@ -60,7 +61,8 @@ namespace Startup_Editor
                     name = item,
                     registryLocation = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce",
                     currentUser = true,
-                    executableLocation = (string)Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce", item, null)
+                    executableLocation = (string)Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce", item, null),
+                    promptForDelete = false
                 });
 
             }
@@ -78,7 +80,8 @@ namespace Startup_Editor
                         name = "Shell",
                         registryLocation = "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon",
                         currentUser = true,
-                        executableLocation = currentUserDesktop.GetValue("Shell").ToString()
+                        executableLocation = currentUserDesktop.GetValue("Shell").ToString(),
+                        promptForDelete = true
                     });
                 }
             }
@@ -87,7 +90,6 @@ namespace Startup_Editor
 
             }
             
-
 
             //Now grab the local startup items
             RegistryKey localMachineRun = null;
@@ -110,12 +112,46 @@ namespace Startup_Editor
                         name = item,
                         registryLocation = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
                         currentUser = false,
-                        executableLocation = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", item, null)
+                        executableLocation = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", item, null),
+                        promptForDelete = false
                     });
 
                 }
             }
+            localMachineRun = null;
 
+            //Grab the local shell
+            try
+            {
+                localMachineRun = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon", true);
+                
+            }
+            catch (Exception)
+            {
+
+            }
+
+            if(localMachineRun != null)
+            {
+                try
+                {
+                    if(localMachineRun.GetValue("Shell").ToString().Length > 0)
+                    {
+                        startupList.Add(new startItems
+                        {
+                            name = "Shell",
+                            registryLocation = "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon",
+                            currentUser = false,
+                            executableLocation = localMachineRun.GetValue("Shell").ToString(),
+                            promptForDelete = true
+                        });
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+            }
 
             //Now grab the local startup runonce
             RegistryKey localMachineRunOnce = null;
@@ -159,7 +195,8 @@ namespace Startup_Editor
                     name = item.name,
                     registryLocation = item.registryLocation,
                     currentUser = item.currentUser,
-                    executableLocation = item.executableLocation
+                    executableLocation = item.executableLocation,
+                    promptForDelete = item.promptForDelete
                 });
             }
         }
@@ -229,8 +266,16 @@ namespace Startup_Editor
                         }
                         else
                         {
-                            currentUserDelete.DeleteValue(item.name);
-                            toDelete.Add(item);
+                            if(item.promptForDelete == true)
+                            {
+                                string messageResponse = MessageBox.Show("This is an important startup item. Are you sure you want to remove it?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning).ToString();
+                                if(messageResponse == "Yes")
+                                {
+                                    currentUserDelete.DeleteValue(item.name);
+                                    toDelete.Add(item);
+                                }
+                            }
+                            
                         }
                     }
                 }
@@ -251,8 +296,16 @@ namespace Startup_Editor
                         }
                         else
                         {
-                            localUserDelete.DeleteValue(item.name);
-                            toDelete.Add(item);
+                            if (item.promptForDelete == true)
+                            {
+                                string messageResponse = MessageBox.Show("This is an important startup item. Are you sure you want to remove it?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning).ToString();
+                                if (messageResponse == "Yes")
+                                {
+                                    localUserDelete.DeleteValue(item.name);
+                                    toDelete.Add(item);
+                                }
+                            }
+                            
                         }
                     }
                 }
