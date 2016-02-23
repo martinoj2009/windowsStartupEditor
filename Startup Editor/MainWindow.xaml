@@ -19,7 +19,7 @@
         <TextBlock x:Name="adminNoticeTextBlock" Margin="398,332,5,0" TextWrapping="Wrap" IsEnabled="False" Height="33" VerticalAlignment="Top"/>
         <Button x:Name="refreshButton" Content="Refresh" HorizontalAlignment="Left" Margin="475,206,0,0" VerticalAlignment="Top" Width="87" Click="button_Click" Height="46"/>
 
-        <Menu VerticalAlignment="Top" HorizontalAlignment="Left" Width="39">
+        <Menu VerticalAlignment="Top" HorizontalAlignment="Left" Width="39" >
             <MenuItem Header="Help">
                 <MenuItem Header="About" HorizontalAlignment="Left" Width="140" Click="MenuItem_Click"/>
                 <MenuItem Header="Exit" HorizontalAlignment="Left" Width="140" Click="MenuItem_Click_1"/>
