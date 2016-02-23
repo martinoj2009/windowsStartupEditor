@@ -370,5 +370,12 @@ namespace Startup_Editor
         {
             main();
         }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            about aboutBox = new about();
+            aboutBox.ShowDialog();
+            aboutBox = null;
+        }
     }
 }
