@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Startup_Editor"
         mc:Ignorable="d"
         Title="Startup Editor" Height="414.727" Width="700" Icon="128px-Pencil_clipart.svg.ico">
-    
+
     <Grid>
 
         <ListBox x:Name="startupListBox" Margin="3,40,0,10" SelectionChanged="startupListBox_SelectionChanged" SelectionMode="Extended" HorizontalAlignment="Left" Width="360"/>
@@ -19,9 +19,10 @@
         <TextBlock x:Name="adminNoticeTextBlock" Margin="398,332,5,0" TextWrapping="Wrap" IsEnabled="False" Height="33" VerticalAlignment="Top"/>
         <Button x:Name="refreshButton" Content="Refresh" HorizontalAlignment="Left" Margin="475,206,0,0" VerticalAlignment="Top" Width="87" Click="button_Click" Height="46"/>
 
-        <Menu HorizontalAlignment="Left" VerticalAlignment="Top" Width="517">
+        <Menu VerticalAlignment="Top" HorizontalAlignment="Left" Width="39">
             <MenuItem Header="Help">
                 <MenuItem Header="About" HorizontalAlignment="Left" Width="140" Click="MenuItem_Click"/>
+                <MenuItem Header="Exit" HorizontalAlignment="Left" Width="140" Click="MenuItem_Click_1"/>
             </MenuItem>
         </Menu>
     </Grid>
